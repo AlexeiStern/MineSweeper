@@ -1,0 +1,36 @@
+body {
+    text-align: center;
+    background-color: indigo;
+}
+
+.board-cell {
+    height: 20px;
+    width: 20px;
+    border: double;
+    text-align: center;
+    transition: background-color 0.5s;
+    background-color: rgb(73, 73, 73);
+    color: rgb(255, 255, 255);
+    text-align: center;
+}
+
+.board-cell:hover {
+    background-color: grey;
+    cursor: pointer;
+}
+
+table {
+    font-size: 0em;
+    margin: auto;
+    border-style: dotted;
+    border: 1em;
+    border-color: rgb(0, 0, 0);
+}
+
+.board {
+    border: double
+}
+.show-card{
+
+
+}

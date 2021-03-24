@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Mine Spirnter</title>
+</head>
+<body onload="init(4)" oncontextmenu="return false;">
+<h1>Mine Sweeper</h1>    
+
+<div>   <button onclick="init(4)">Easy</button>
+    <button onclick="init(8)">Medium</button>
+    <button onclick="init(12)">Hard</button>
+    <button onclick="init()">Reset board</button>
+</div>
+<div class="stopwatch"></div>
+<div>
+    <table border="1" cellpadding="13" class="board">
+        <tbody class="board-cell">
+        </tbody>
+      </table>
+</div>
+
+
+
+
+<script src ="./js/util.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
