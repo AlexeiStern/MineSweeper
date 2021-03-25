@@ -3,6 +3,16 @@ body {
     background-color: indigo;
 }
 
+h1{
+
+    font-size: 50px;
+    background-color: rgb(176, 78, 233);
+    width: 10em;
+    margin: auto;
+    border-radius: 25%;
+    border:double;
+    border-width: 1cm;
+}
 .board-cell {
     height: 20px;
     width: 20px;
@@ -12,6 +22,9 @@ body {
     background-color: rgb(73, 73, 73);
     color: rgb(255, 255, 255);
     text-align: center;
+    border: double;
+    border-radius: .5em;
+    font-weight: bolder;
 }
 
 .board-cell:hover {
@@ -20,7 +33,7 @@ body {
 }
 
 table {
-    font-size: 0em;
+    font-size: 0rem;
     margin: auto;
     border-style: dotted;
     border: 1em;
@@ -30,7 +43,49 @@ table {
 .board {
     border: double
 }
-.show-card{
+/* .show-card{
 
 
+} */
+
+.life{
+
+    font-size: 40px;
+    color:red;
+    background-color: black;
+    width: 12.5rem;
+    margin: auto;
+    text-shadow: .5px 3.5px rgb(129, 73, 40);
+}
+
+.smiley{
+    
+    font-size: 7rem;
+   
+}
+
+.highscores
+{
+    color:chocolate;
+    
+border:solid;
+width: 12rem;
+margin: auto;
+border-bottom-width: 1px;
+background-color: rgb(11, 21, 78);
+}
+.stopwatch
+{
+    color:crimson;
+    background-color: darkblue;
+    width: 12rem;
+    margin: auto;
+    border:double;
+    border-top-width: 1px;
+}
+button{
+
+    border: double;
+    color:black;
+    background-color: rgb(255, 255, 255);
 }
