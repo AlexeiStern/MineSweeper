@@ -3,16 +3,16 @@ body {
     background-color: indigo;
 }
 
-h1{
-
+h1 {
     font-size: 50px;
     background-color: rgb(176, 78, 233);
     width: 10em;
     margin: auto;
     border-radius: 25%;
-    border:double;
+    border: double;
     border-width: 1cm;
 }
+
 .board-cell {
     height: 20px;
     width: 20px;
@@ -41,51 +41,47 @@ table {
 }
 
 .board {
-    border: double
+    border: double;
 }
+
 /* .show-card{
 
 
 } */
 
-.life{
-
+.life {
     font-size: 40px;
-    color:red;
+    color: red;
     background-color: black;
     width: 12.5rem;
     margin: auto;
     text-shadow: .5px 3.5px rgb(129, 73, 40);
 }
 
-.smiley{
-    
+.smiley {
     font-size: 7rem;
-   
 }
 
-.highscores
-{
-    color:chocolate;
-    
-border:solid;
-width: 12rem;
-margin: auto;
-border-bottom-width: 1px;
-background-color: rgb(11, 21, 78);
+.highscores {
+    color: chocolate;
+    border: solid;
+    width: 12rem;
+    margin: auto;
+    border-bottom-width: 1px;
+    background-color: rgb(11, 21, 78);
 }
-.stopwatch
-{
-    color:crimson;
+
+.stopwatch {
+    color: crimson;
     background-color: darkblue;
     width: 12rem;
     margin: auto;
-    border:double;
+    border: double;
     border-top-width: 1px;
 }
-button{
 
+button {
     border: double;
-    color:black;
+    color: black;
     background-color: rgb(255, 255, 255);
 }

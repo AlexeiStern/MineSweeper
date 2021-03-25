@@ -3,14 +3,14 @@
 var BOMB = '💣';
 var FLAG = '🚩';
 var BOMBED = '💥';
-var LIVES = '❤❤❤'
+var LIVES = '❤❤❤';
 var gBoard = [];
 var gCurrDiff = 4;
 var gGameTime;
 var gInterval;
 var isFirstMove = true;
 var gIsGameOn = true;
-var gUnOpenedCells
+var gUnOpenedCells;
 var gTotalBombs;
 var gFlagged = 0;
 
@@ -21,22 +21,22 @@ function init(difficulty = gCurrDiff) {
     isFirstMove = true;
     gBoard = createBoard(difficulty);
     renderBoard(gBoard);
-    var elFace = document.querySelector('.smiley')
-    elFace.innerText ='😀';
+    var elFace = document.querySelector('.smiley');
+    elFace.innerText = '😀';
     LIVES = '❤❤❤';
-    var elLiveCounter = document.querySelector('.life')
-    elLiveCounter.innerText = LIVES
-    console.log('bomb amount:', gTotalBombs)
+    var elLiveCounter = document.querySelector('.life');
+    elLiveCounter.innerText = LIVES;
+    // console.log('bomb amount:', gTotalBombs);
     gFlagged = 0;
-if(localStorage.easy)
-    getHighScore();
-else
-{localStorage.easy=9999;
-localStorage.medium=9999;
-localStorage.hard=9999;
-getHighScore();
-}
-    gUnOpenedCells = (gBoard.length ** 2) - gTotalBombs
+    if (localStorage.easy)
+        getHighScore();
+    else {
+        localStorage.easy = 9999;
+        localStorage.medium = 9999;
+        localStorage.hard = 9999;
+        getHighScore();
+    }
+    gUnOpenedCells = (gBoard.length ** 2) - gTotalBombs;
     var elTable = document.querySelector('table');
     elTable.style.fontSize = 0 + 'rem';
 }
@@ -89,7 +89,7 @@ function renderBoard(mat) {
 
     var strHTML = '';
     for (var i = 0; i < mat.length; i++) {
-        strHTML += `<tr class="board-cell show-card ">\n`
+        strHTML += `<tr class="board-cell show-card ">\n`;
         for (var j = 0; j < mat.length; j++) {
             // console.log(`j`, j);
             // console.log(`i`, i);
@@ -104,12 +104,12 @@ function renderBoard(mat) {
     // console.log(elBoard);
 }
 function cellClick(elClicked, row, col) {
-    // console.log('Row:', row, 'Col:', col)
-    // console.log(elClicked)
+    // console.log('Row:', row, 'Col:', col);
+    // console.log(elClicked);
 
-    // var elTest=document.querySelector('.row'+row, '.col'+col)
+    // var elTest=document.querySelector('.row'+row, '.col'+col);
 
-    //                 console.log(elTest)
+    //                 console.log(elTest);
 
     if ((gIsGameOn) && (gBoard[row][col].isShow === false)) {
         gBoard[row][col].isShow = true;
@@ -126,27 +126,27 @@ function cellClick(elClicked, row, col) {
             elClicked.style.fontSize = 1 + 'rem';
             if (gBoard[row][col].type === BOMB) {
                 elClicked.innerText = BOMBED;
-                elClicked.style.backgroundColor = 'red'
-                var elLiveCounter = document.querySelector('.life')
+                elClicked.style.backgroundColor = 'red';
+                var elLiveCounter = document.querySelector('.life');
                 LIVES = LIVES.slice(0, -1);
                 gFlagged++;
-                var elSmiley = document.querySelector('.smiley')
-                elSmiley.innerText = '🤯'
+                var elSmiley = document.querySelector('.smiley');
+                elSmiley.innerText = '🤯';
                 elLiveCounter.innerText = LIVES;
-                console.log(LIVES)
+                // console.log(LIVES);
                 if (LIVES === '')
                     gameOver();
                 // return;
             }
             else {
                 var elSmiley = document.querySelector('.smiley')
-                elSmiley.innerText = '😀'
+                elSmiley.innerText = '😀';
                 if (!gBoard[row][col].isFlagged) {
                     var bombCount = countNeighboors(row, col);
                     if (bombCount) {
                         gUnOpenedCells--;
                         elClicked.innerText = bombCount;
-                        colorizeCell(elClicked, bombCount)
+                        colorizeCell(elClicked, bombCount);
                     }
 
                     else {
@@ -162,9 +162,9 @@ function cellClick(elClicked, row, col) {
         }
     }
     if ((gFlagged === gTotalBombs) && (gUnOpenedCells === 0)) {
-        victoryMessage()
+        victoryMessage();
     }
-    console.log('Unclicked cells:', gUnOpenedCells)
+    // console.log('Unclicked cells:', gUnOpenedCells)
 }
 function cellExtractor(row, col) {
 
@@ -173,16 +173,16 @@ function cellExtractor(row, col) {
             for (var j = col - 1; j <= col + 1; j++) {
                 if ((j >= 0) && (j + 1 <= gBoard.length))
                     if ((i !== row) || (j !== col)) {
-                        var elCloseCell = document.querySelector('.row' + i + '.col' + j)
-                        // console.log('elCloseCell', elCloseCell)
-                        // console.log(i, j)
-                        var cellNegs = countNeighboors(i, j)
+                        var elCloseCell = document.querySelector('.row' + i + '.col' + j);
+                        // console.log('elCloseCell', elCloseCell);
+                        // console.log(i, j);
+                        var cellNegs = countNeighboors(i, j);
                         if (gBoard[i][j].isShow === false) gUnOpenedCells--;
-                        gBoard[i][j].isShow = true
-                        elCloseCell.innerText = cellNegs
-                        colorizeCell(elCloseCell, cellNegs)
+                        gBoard[i][j].isShow = true;
+                        elCloseCell.innerText = cellNegs;
+                        colorizeCell(elCloseCell, cellNegs);
                         elCloseCell.style.fontSize = 1 + 'rem';
-                        // console.log('gUnOpenedCells in extractor:',gUnOpenedCells)
+                        // console.log('gUnOpenedCells in extractor:',gUnOpenedCells);
 
 
                     }
@@ -211,7 +211,7 @@ function colorizeCell(cellToColor, bombsNearby) {
         case 7: cellToColor.style.backgroundColor = ' rgb(178, 10, 230)';
             break;
         case 8: cellToColor.style.backgroundColor = 'rgb(0,0,0)';
-            break
+            break;
         case 0: cellToColor.style.backgroundColor = 'rgb(0, 204, 255)';
         default:
             cellToColor.style.backgroundColor = 'rgb(0, 204, 255)';
@@ -225,7 +225,7 @@ function cellFlagged(elClicked, row, col) {
             if (elClicked.innerText !== FLAG) {
                 elClicked.innerText = FLAG;
                 gFlagged++;
-                // console.log(gFlagged)
+                // console.log(gFlagged);
                 elClicked.style.fontSize = 1 + 'rem';
                 gBoard[row][col].isFlagged = true;
             }
@@ -243,7 +243,7 @@ function cellFlagged(elClicked, row, col) {
         }
         // console.log(gUnOpenedCells)
         if ((gFlagged === gTotalBombs) && (gUnOpenedCells === 0)) {
-            victoryMessage()
+            victoryMessage();
         }
     }
 }
@@ -260,7 +260,7 @@ function gameOver() {
 }
 
 function countNeighboors(row, col) {
-    var bombsNear = 0
+    var bombsNear = 0;
     for (var i = row - 1; i <= row + 1; i++) {
         if ((i >= 0) && (i + 1 <= gBoard.length))
             for (var j = col - 1; j <= col + 1; j++)
@@ -282,24 +282,23 @@ function showStopwatch() {
 }
 
 function victoryMessage() {
-    var elScore=document.querySelector('.stopwatch') 
-    var victoryScore=parseFloat(elScore.innerText);
-    console.log(victoryScore)
-    switch (gCurrDiff)
-    {
-case 4: if(localStorage.easy>victoryScore) localStorage.easy=victoryScore; break;
-case 8: if(localStorage.medium>victoryScore) localStorage.medium=victoryScore; break;
-case 12: if(localStorage.hard>victoryScore) localStorage.hard=victoryScore; break;
-default : if(localStorage.randomBoardSize<victoryScore) localStorage.randomBoardSize=victoryScore; break;
+    var elScore = document.querySelector('.stopwatch');
+    var victoryScore = parseFloat(elScore.innerText);
+    // console.log(victoryScore);
+    switch (gCurrDiff) {
+        case 4: if (localStorage.easy > victoryScore) localStorage.easy = victoryScore; break;
+        case 8: if (localStorage.medium > victoryScore) localStorage.medium = victoryScore; break;
+        case 12: if (localStorage.hard > victoryScore) localStorage.hard = victoryScore; break;
+        default: /*if (localStorage.randomBoardSize < victoryScore) localStorage.randomBoardSize = victoryScore;*/ break;
 
     }
-      
+
     clearInterval(gInterval)
-    var elFace = document.querySelector('.smiley')
-    elFace.innerText ='😎';
+    var elFace = document.querySelector('.smiley');
+    elFace.innerText = '😎';
     gIsGameOn = false;
-    
-    alert('Congrats! you win!')
+
+    alert('Congrats! you win!');
 }
 
 function addBomb(mat) {
@@ -316,10 +315,9 @@ function addBomb(mat) {
     }
 }
 
-function getHighScore()
-{
-var elScores = document.querySelector('.highscores')
-elScores.innerHTML= `High score for easy:${localStorage.easy} <br> High score for medium:${localStorage.medium}<br>High score for hard:${localStorage.hard}`
+function getHighScore() {
+    var elScores = document.querySelector('.highscores');
+    elScores.innerHTML = `High score for easy:${localStorage.easy} <br> High score for medium:${localStorage.medium}<br>High score for hard:${localStorage.hard}`;
 
 
 }
