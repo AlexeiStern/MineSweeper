@@ -69,12 +69,12 @@ function renderBoard(mat) {
     var strHTML = '';
     for (var i = 0; i < mat.length; i++) {
         strHTML += `<tr class="board-cell show-card ">\n`
-        for (var j = 0; j < gBoard[0].length; j++) {
+        for (var j = 0; j < mat.length; j++) {
             console.log(`j`, j);
-
-            strHTML += `<td class="board-cell row${i} col${j} " onclick="cellClick(this, ${i}, ${j})" oncontextmenu="cellFlagged(this,${i},${j})">${gBoard[i][j].type}</td>`;
             console.log(`i`, i);
 
+            strHTML += `<td class="board-cell row${i} col${j} " onclick="cellClick(this, ${i}, ${j})" oncontextmenu="cellFlagged(this,${i},${j})">${gBoard[i][j].type}</td>`;
+            // if (j===mat.length-1) continue;
         }
         strHTML += `</tr>`;
     }
@@ -84,7 +84,9 @@ function renderBoard(mat) {
 }
 
 function cellClick(elClicked, row, col) {
-    gBoard[row][col].isShow = true;
+    // gBoard[row][col].isShow = true;
+    console.log('Row:', row, 'Col:', col)
+    console.log(elClicked)
 
     // var elTest=document.querySelector('.row'+row, '.col'+col)
 
@@ -97,61 +99,73 @@ function cellClick(elClicked, row, col) {
     elClicked.style.fontSize = 1 + 'rem';
     if (gBoard[row][col].type === BOMB) {
         elClicked.innerText = BOMBED;
+        elClicked.style.backgroundColor ='red'
         gameOver();
+        return;
     }
     else if (!gBoard[row][col].isFlagged)
 
         var bombCount = countNeighboors(row, col);
     if (bombCount) {
         elClicked.innerText = bombCount;
-        {
-            switch (bombCount) {
-                case 1: elClicked.style.backgroundColor = 'blue';
-                    break;
-                case 2: elClicked.style.backgroundColor = 'rgb(8, 128, 226)';
-                    break;
-                case 3: elClicked.style.backgroundColor = 'rgb(20, 212, 84)'
-                    break;
-                case 4: elClicked.style.backgroundColor = 'rgb(132, 238, 61)';
-                    break;
-                case 5: elClicked.style.backgroundColor = 'rgb(247, 243, 9)';
-                    break;
-                case 6: elClicked.style.backgroundColor = 'rgb(228, 94, 5)';
-                    break;
-                case 7: elClicked.style.backgroundColor = ' rgb(178, 10, 230)';
-                    break;
-                case 8: elClicked.style.backgroundColor = 'rgb(0,0,0)';
-                    break
-                default:
-                    elClicked.style.backgroundColor = 'red';
-                    break;
-            }
-
-        }
+        colorizeCell(elClicked,bombCount)    
     }
-    else
-        elClicked.style.backgroundColor = 'red';
-    cellExtractor(elClicked, row, col);
+    
+    else {
+        elClicked.innerText = bombCount;
+        elClicked.style.backgroundColor = 'rgb(0, 204, 255)';
+        cellExtractor(row, col);
+    }
+}
 
+function cellExtractor(row, col) {
+
+    for (var i = row - 1; i <= row + 1; i++) {
+        if ((i >= 0) && (i + 1 <= gBoard.length))
+            for (var j = col - 1; j <= col + 1; j++) {
+                if ((j >= 0) && (j + 1 <= gBoard.length))
+                    if ((i !== row) || (j !== col)) {
+                        var elCloseCell = document.querySelector('.row' + i+ '.col' + j)
+                        console.log('elCloseCell',elCloseCell)
+                        console.log(i,j)
+                       var  cellNegs = countNeighboors(i, j)
+                        elCloseCell.innerText = cellNegs
+                     colorizeCell(elCloseCell,cellNegs)
+                        elCloseCell.style.fontSize = 1 + 'rem';
+
+
+                    }
+
+            }
+    }
 }
 
 
-// function cellExtractor(elClicked, row, col) {
-
-//     for (var i = row - 1; i <= row + 1; i++) {
-//         if ((i >= 0) && (i + 1 <= gBoard.length))
-//             for (var j = col - 1; j <= col + 1; j++)
-//             {
-//                 if ((j >= 0) && (j + 1 <= gBoard.length))
-//                     if ((i !== row) || (j !== col)) {
-
-
-
-//                     }
-
-//                 }
-//             }
-// }
+function colorizeCell(cellToColor,bombsNearby)
+{
+    switch (bombsNearby) {
+        case 1: cellToColor.style.backgroundColor = 'blue';
+            break;
+        case 2: cellToColor.style.backgroundColor = 'rgb(8, 128, 226)';
+            break;
+        case 3: cellToColor.style.backgroundColor = 'rgb(20, 212, 84)'
+            break;
+        case 4: cellToColor.style.backgroundColor = 'rgb(132, 238, 61)';
+            break;
+        case 5: cellToColor.style.backgroundColor = 'rgb(247, 243, 9)';
+            break;
+        case 6: cellToColor.style.backgroundColor = 'rgb(228, 94, 5)';
+            break;
+        case 7: cellToColor.style.backgroundColor = ' rgb(178, 10, 230)';
+            break;
+        case 8: cellToColor.style.backgroundColor = 'rgb(0,0,0)';
+            break
+            case 0:  cellToColor.style.backgroundColor = 'rgb(0, 204, 255)';
+        default:
+            cellToColor.style.backgroundColor = 'rgb(0, 204, 255)';
+            break;
+    }
+}
 
 function cellFlagged(elClicked, row, col) {
     elClicked.style.fontSize = 1 + 'rem';
