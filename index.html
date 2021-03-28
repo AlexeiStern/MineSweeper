@@ -10,13 +10,16 @@
 
 <body onload="init(4)" oncontextmenu="return false;">
     <h1>Mine Sweeper</h1>
-
-    <div class="smiley"></div>
-    <div> <button onclick="init(4)">Easy</button>
-        <button onclick="init(8)">Medium</button>
-        <button onclick="init(12)">Hard</button>
-        <button onclick="init()">Reset board</button>
-    </div>
+   
+        
+        <div class="smiley"  onclick="init()"></div>
+    
+        <div> <button onclick="init(4)">Easy</button>
+            <button onclick="init(8)">Medium</button>
+            <button onclick="init(12)">Hard</button>
+            <button onclick="init()">Reset Board</button>
+        </div>
+        
     <div>
         <table border="1" cellpadding="13" class="board">
             <tbody class="board-cell">
@@ -26,8 +29,13 @@
     <div class="life"></div>
     <div class="highscores"></div>
 
+<!-- <div>
+    <div onclick="hintClicked(this)">💡
+    <div onclick="hintClicked(this)">💡</div></div>
+    <button onclick="hintClicked(this)">💡</button>
 
-    <div class="stopwatch"></div>
+</div> -->
+    <div class="stopwatch">0.000</div>
 
 
     <script src="./js/util.js"></script>
