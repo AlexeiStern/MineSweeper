@@ -15,6 +15,7 @@ var gTotalBombs;
 var gFlagged = 0;
 var gHintOn = false;
 var gSafeClick = 3;
+var gFlagCounter;
 
 
 
@@ -43,6 +44,9 @@ function init(difficulty = gCurrDiff) {
     gUnOpenedCells = (gBoard.length ** 2) - gTotalBombs;
     var elTable = document.querySelector('table');
     elTable.style.fontSize = 0 + 'rem';
+    gFlagCounter = gTotalBombs;
+    var elRemFlag = document.querySelector('.flags-remaining')
+    elRemFlag.innerText = `🚩:${gFlagCounter}`
 }
 function createBoard(size) {
     var mat = [];
@@ -55,7 +59,7 @@ function createBoard(size) {
                 isFlagged: false,
                 isShow: false,
                 isBomb: false,
-                isExtacted:false
+                isExtacted: false
             }
             mat[i][j] = cell;
         }
@@ -109,8 +113,8 @@ function renderBoard(mat) {
     // console.log(elBoard);
 }
 function cellClick(elClicked, row, col) {
-    
-    if ((gIsGameOn) && (!gBoard[row][col].isShow)&&(!gBoard[row][col].isFlagged)) {
+
+    if ((gIsGameOn) && (!gBoard[row][col].isShow) && (!gBoard[row][col].isFlagged)) {
         gBoard[row][col].isShow = true;
         if (isFirstMove) {
             if (gBoard[row][col].type === BOMB) {
@@ -130,6 +134,7 @@ function cellClick(elClicked, row, col) {
                 var elLiveCounter = document.querySelector('.life');
                 LIVES = LIVES.slice(0, -1);
                 gFlagged++;
+                gFlagCounter--;
                 var elSmiley = document.querySelector('.smiley');
                 elSmiley.innerText = '🤯';
                 elLiveCounter.innerText = LIVES;
@@ -142,36 +147,37 @@ function cellClick(elClicked, row, col) {
                 var elSmiley = document.querySelector('.smiley')
                 elSmiley.innerText = '😀';
                 // if (!gBoard[row][col].isFlagged) {
-                    var bombCount = countNeighboors(row, col);
-                    if (bombCount) {
-                        gUnOpenedCells--;
-                        elClicked.innerText = bombCount;
-                        colorizeCell(elClicked, bombCount);
-                    }
+                var bombCount = countNeighboors(row, col);
+                if (bombCount) {
+                    gUnOpenedCells--;
+                    elClicked.innerText = bombCount;
+                    colorizeCell(elClicked, bombCount);
+                }
 
-                    else {
+                else {
 
-                        elClicked.style.backgroundColor = 'rgb(0, 204, 255)';
-                        cellExtractor(row, col);
-                        gUnOpenedCells--;
-                    colorizeCell(elClicked,0);
+                    elClicked.style.backgroundColor = 'rgb(0, 204, 255)';
+                    cellExtractor(row, col);
+                    gUnOpenedCells--;
+                    colorizeCell(elClicked, 0);
 
-                    
+
                 }
 
             }
         }
     }
+    var elRemFlag = document.querySelector('.flags-remaining');
+    elRemFlag.innerText = `🚩:${gFlagCounter}`;
 
-    
     console.log(gUnOpenedCells)
-    if ((gFlagged === gTotalBombs) && (gUnOpenedCells === 0)&&gIsGameOn) {
+    if ((gFlagged === gTotalBombs) && (gUnOpenedCells === 0) && gIsGameOn) {
         victoryMessage();
     }
     // console.log('Unclicked cells:', gUnOpenedCells)
 }
 function cellExtractor(row, col) {
-gBoard[row][col].isExtacted=true;
+    gBoard[row][col].isExtacted = true;
     for (var i = row - 1; i <= row + 1; i++) {
         if ((i >= 0) && (i + 1 <= gBoard.length))
             for (var j = col - 1; j <= col + 1; j++) {
@@ -181,7 +187,12 @@ gBoard[row][col].isExtacted=true;
                         // console.log('elCloseCell', elCloseCell);
                         // console.log(i, j);
                         var cellNegs = countNeighboors(i, j);
-                        if ((cellNegs===0)&&(!gBoard[i][j].isExtacted)) cellExtractor(i,j);
+                        if (gBoard[i][j].isFlagged) {
+                            gFlagged--;
+                            gFlagCounter++;
+                            gBoard[i][j].isFlagged = false;
+                        }
+                        if ((cellNegs === 0) && (!gBoard[i][j].isExtacted)) cellExtractor(i, j);
                         if (!gBoard[i][j].isShow) gUnOpenedCells--;
                         gBoard[i][j].isShow = true;
                         elCloseCell.innerText = cellNegs;
@@ -194,7 +205,7 @@ gBoard[row][col].isExtacted=true;
 
             }
     }
-    
+
 
 }
 
@@ -209,7 +220,7 @@ function colorizeCell(cellToColor, bombsNearby) {
             break;
         case 4: cellToColor.style.backgroundColor = 'rgb(132, 238, 61)';
             break;
-        case 5: cellToColor.style.backgroundColor = 'rgb(247, 243, 9)';
+        case 5: cellToColor.style.backgroundColor = 'green';
             break;
         case 6: cellToColor.style.backgroundColor = 'rgb(228, 94, 5)';
             break;
@@ -218,13 +229,13 @@ function colorizeCell(cellToColor, bombsNearby) {
         case 8: cellToColor.style.backgroundColor = 'rgb(0,0,0)';
             break;
         case 0: cellToColor.style.backgroundColor = 'rgb(0, 204, 255)';
-        cellToColor.innerText= '';
-        break;
+            cellToColor.innerText = '';
+            break;
         default:
             cellToColor.style.backgroundColor = 'rgb(0, 204, 255)';
             break;
     }
-    cellToColor.style.fontSize = 1+'rem';
+    cellToColor.style.fontSize = 1 + 'rem';
 }
 
 function cellFlagged(elClicked, row, col) {
@@ -232,22 +243,24 @@ function cellFlagged(elClicked, row, col) {
         isFirstMove = false;
         gGameTime = new Date().getTime();
         gInterval = setInterval(showStopwatch, 50);
-        gIsGameOn=true;
+        gIsGameOn = true;
     }
-    if(gIsGameOn) {
-        if (((elClicked.style.fontSize !== 1+'rem')&&(elClicked.style.fontSize !==.83+'rem')) || (elClicked.innerText === FLAG)) {
+    if (gIsGameOn) {
+        if (((elClicked.style.fontSize !== 1 + 'rem') && (elClicked.style.fontSize !== .83 + 'rem')) || (elClicked.innerText === FLAG)) {
             if (elClicked.innerText !== FLAG) {
                 elClicked.innerText = FLAG;
+                gFlagCounter--;
                 gFlagged++;
                 // console.log(gFlagged);
                 elClicked.style.fontSize = .83 + 'rem';
-                elClicked.style.backgroundColor='rgb(156, 79, 79)'
+                elClicked.style.backgroundColor = 'rgb(156, 79, 79)'
                 gBoard[row][col].isFlagged = true;
             }
             else if (elClicked.innerText === FLAG) {
                 elClicked.style.fontSize = 0 + 'rem';
-                elClicked.style.backgroundColor='rgb(73, 73, 73)'
+                elClicked.style.backgroundColor = 'rgb(73, 73, 73)'
                 gFlagged--;
+                gFlagCounter++;
                 // console.log(gFlagged)
                 if (gBoard[row][col].isBomb)
                     elClicked.innerText = BOMB;
@@ -257,6 +270,8 @@ function cellFlagged(elClicked, row, col) {
             }
 
         }
+        var elRemFlag = document.querySelector('.flags-remaining');
+        elRemFlag.innerText = `🚩:${gFlagCounter}`;
         // console.log(gUnOpenedCells)
         if ((gFlagged === gTotalBombs) && (gUnOpenedCells === 0)) {
             victoryMessage();
@@ -302,20 +317,32 @@ function victoryMessage() {
     var victoryScore = parseFloat(elScore.innerText);
     // console.log(victoryScore);
     switch (gCurrDiff) {
-        case 4: if (localStorage.easy > victoryScore) localStorage.easy = victoryScore; break;
-        case 8: if (localStorage.medium > victoryScore) localStorage.medium = victoryScore; break;
-        case 12: if (localStorage.hard > victoryScore) localStorage.hard = victoryScore; break;
-       
+        case 4: if (localStorage.easy > victoryScore) {
+            localStorage.easy = victoryScore
+            alert(`🎺🎺🎺NEW HIGHSCORE!!!🎺🎺🎺\n${victoryScore}\nOn Easy!`);
+        }
+            ; break;
+        case 8: if (localStorage.medium > victoryScore){
+             localStorage.medium = victoryScore;
+             alert(`🎺🎺🎺NEW HIGHSCORE!!!🎺🎺🎺\n${victoryScore}\nOn Medium!`);
+        }
+         break;
+        case 12: if (localStorage.hard > victoryScore){ localStorage.hard = victoryScore;
+            alert(`🎺🎺🎺NEW HIGHSCORE!!!🎺🎺🎺\n${victoryScore}\nOn Hard!`);
+        }
+         break;
+
         default: /*if (localStorage.randomBoardSize < victoryScore) localStorage.randomBoardSize = victoryScore;*/ break;
 
     }
-    
+
     clearInterval(gInterval)
     var elFace = document.querySelector('.smiley');
     elFace.innerText = '😎';
     gIsGameOn = false;
-
-    alert('Congrats! you win!');
+var elvictory = document.querySelector('.life')
+elvictory.innerText='Victory!!!'
+    // alert('Congrats! you win!');
 }
 
 function addBomb(mat) {
@@ -334,16 +361,16 @@ function addBomb(mat) {
 
 function getHighScore() {
     var elScores = document.querySelector('.highscores');
-    elScores.innerHTML = `High score for easy:${localStorage.easy} <br> High score for medium:${localStorage.medium}<br>High score for hard:${localStorage.hard}`;
+    elScores.innerHTML = `High score for EASY: ${localStorage.easy} <br> High score for MEDIUM: ${localStorage.medium}<br>High score for HARD: ${localStorage.hard}`;
 
 
 }
 
 
 
-function hintClicked(hints)
-{gHintOn=true
-hints.innerText= hints.innerText.slice(0,-1)
+function hintClicked(hints) {
+    gHintOn = true
+    hints.innerText = hints.innerText.slice(0, -1)
 
 
 }
